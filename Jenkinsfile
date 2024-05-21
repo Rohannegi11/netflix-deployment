@@ -16,7 +16,7 @@ pipeline{
         }
         stage('Checkout from Git'){
             steps{
-                git branch: 'main', url: 'https://github.com/devopscloudlabs/Netflix-clone.git'
+                git branch: 'main', url: https://github.com/Rohannegi11/netflix-deployment.git
             }
         }
         stage("Sonarqube Analysis "){
@@ -55,20 +55,20 @@ pipeline{
                 script{
                    withDockerRegistry(credentialsId: 'docker', toolName: 'docker'){   
                        sh "docker build --build-arg TMDB_V3_API_KEY=cffd98e475df4af6af0e4ce156a5d0fe -t netflix ."
-                       sh "docker tag netflix <DockerHub-Username>/<Image-Name:Version> "
-                       sh "docker push <DockerHub-Username>/<Image-Name:Version> "
+                       sh "docker tag netflix rohannegi11/netflixdeployment:Version "
+                       sh "docker push rohannegi11/netflixdeployment::Version "
                     }
                 }
             }
         }
         stage("TRIVY"){
             steps{
-                sh "trivy image <DockerHub-Username>/<Image-Name:Version> > trivyimage.txt" 
+                sh "trivy image rohannegi11/netflixdeployment:Version> > trivyimage.txt" 
             }
         }
         stage('Deploy to container'){
             steps{
-                sh 'docker run -d --name netflix -p 8081:80 <DockerHub-Username>/<Image-Name:Version>'
+                sh 'docker run -d --name netflix -p 8081:80 rohannegi11/netflixdeployment:Version>'
             }
         }
         stage('Deploy to kubernetes'){
